@@ -31,14 +31,14 @@ if st.sidebar.button("Start Chat"):
     thread = client.beta.threads.create()
     st.session_state.thread_id = thread.id
 
-if st.button("Exit Chat"):
+if st.sidebar.button("Exit Chat"):
     st.session_state.messages = []  # Clear the chat history
     st.session_state.start_chat = False  # Reset the chat state
     st.session_state.thread_id = None
 
 if st.session_state.start_chat:
     if "openai_model" not in st.session_state:
-        st.session_state.openai_model = "gpt-4-1106-preview"
+        st.session_state.openai_model = "gpt-4-turbo-preview"
     if "messages" not in st.session_state:
         st.session_state.messages = []
     
