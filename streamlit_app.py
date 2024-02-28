@@ -41,7 +41,9 @@ if st.session_state.start_chat:
         st.session_state.openai_model = "gpt-4-turbo-preview"
     if "messages" not in st.session_state:
         st.session_state.messages = []
-    
+    if password != st.secrets.PASSWORD:
+        st.info("Wrong password")
+        st.stop()
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
