@@ -83,29 +83,35 @@ if st.session_state.start_chat:
                 st.markdown(message.content[0].text.value)
 
 else:
-    st.markdown("""
-            # Welcome to LLaMaC, your Cultural Heritage Knowledge Base Assistant!
+    if assistant_option == "LLaMaC": 
+        st.markdown("""
+                # Welcome to LLaMaC, your Cultural Heritage Knowledge Base Assistant!
 
-    LLaMaC is designed to assist users in managing cultural heritage information using the CIDOC Conceptual Reference Model (CIDOC-CRM) as its foundation. This system allows users to add, update, delete, and query cultural heritage data in a structured and reliable manner. Follow the guidelines below to interact with LLaMaC effectively:
+        LLaMaC is designed to assist users in managing cultural heritage information using the CIDOC Conceptual Reference Model (CIDOC-CRM) as its foundation. This system allows users to add, update, delete, and query cultural heritage data in a structured and reliable manner. Follow the guidelines below to interact with LLaMaC effectively:
 
-    ## Adding Information
-    - To add new cultural heritage information, use the format `ADD[Your Information Here]`. LLaMaC will evaluate the authenticity of the information. If considered genuine, it will be added to the knowledge base.
+        ## Adding Information
+        - To add new cultural heritage information, use the format `ADD[Your Information Here]`. LLaMaC will evaluate the authenticity of the information. If considered genuine, it will be added to the knowledge base.
 
-    ## Updating Information
-    - If you need to modify existing information, use `UPDATE[Your Updated Information Here]`. Ensure your updates are accurate and relevant to the cultural heritage data.
+        ## Updating Information
+        - If you need to modify existing information, use `UPDATE[Your Updated Information Here]`. Ensure your updates are accurate and relevant to the cultural heritage data.
 
-    ## Deleting Information
-    - To remove information from the knowledge base, use `DEL[Specific Information to Delete]`. This action will permanently delete the specified data.
+        ## Deleting Information
+        - To remove information from the knowledge base, use `DEL[Specific Information to Delete]`. This action will permanently delete the specified data.
 
-    ## Querying Information
-    - Have a question? Use `Q[Your Question Here]` to receive answers based solely on the stored knowledge base data, without additional explanations or external information.
+        ## Querying Information
+        - Have a question? Use `Q[Your Question Here]` to receive answers based solely on the stored knowledge base data, without additional explanations or external information.
 
-    ## Additional Instructions
-    - For any adjustments or specific instructions on how data should be handled, use `CON[Your Instruction Here]`. LLaMaC will adapt its approach to meet these guidelines.
+        ## Additional Instructions
+        - For any adjustments or specific instructions on how data should be handled, use `CON[Your Instruction Here]`. LLaMaC will adapt its approach to meet these guidelines.
 
-    ## Handling URLs
-    - When provided with a URL in the format `ADD[URL]`, LLaMaC will retrieve, download, and extract cultural heritage data from the given link, incorporating this information into the knowledge base according to CIDOC-CRM standards.
+        ## Handling URLs
+        - When provided with a URL in the format `ADD[URL]`, LLaMaC will retrieve, download, and extract cultural heritage data from the given link, incorporating this information into the knowledge base according to CIDOC-CRM standards.
 
-    LLaMaC is committed to maintaining a high accuracy level and relies on users to provide genuine cultural heritage information. Your cooperation is essential in building a valuable and trustworthy knowledge base.
+        LLaMaC is committed to maintaining a high accuracy level and relies on users to provide genuine cultural heritage information. Your cooperation is essential in building a valuable and trustworthy knowledge base.
 
-        """)
+            """)
+    if assistant_option == "building......": 
+        st.markdown("""
+                # Still building more 
+                """)
+
