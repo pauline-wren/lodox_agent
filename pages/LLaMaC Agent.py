@@ -1,11 +1,47 @@
-import openai
 import streamlit as st
-import os
+import openai
+from SPARQLWrapper import SPARQLWrapper, JSON, XML, RDF, N3
+from urllib.error import URLError
 import time
 
-password =  st.sidebar.text_input('Give me password', type='password')
-assistant_id = st.secrets.ASSISTANT_ID
-openai.api_key = st.secrets.OPENAI_API_KEY
+# Assuming 'client' is a configured OpenAI client instance
+client = openai
+client.api_key = st.secrets["OPENAI_API_KEY"]
+
+assistant_id = st.secrets["AGENT_ID"]
+
+# Initialize session state for chat
+if "start_chat" not in st.session_state:
+    st.session_state.start_chat = False
+if "thread_id" not in st.session_state:
+    st.session_state.thread_id = None
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+password = st.sidebar.text_input('Password', type='password')
+sparql_endpoint = st.sidebar.text_input('Sparql_endpoint')
+
+import json
+
+# Assuming 'results' is the dictionary you got from the SPARQL query
+
+# Now 'results_string' is a string representation of your results
+
+def execute_sparql_query(endpoint, query, result_format, username=None, password=None):
+    sparql = SPARQLWrapper(endpoint)
+    if username and password:
+        sparql.setHTTPAuth(SPARQLWrapper.BASIC)
+        sparql.setCredentials(username, password)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(result_format)
+    try:
+        results = sparql.query().convert()
+        results_string = json.dumps(results)
+        
+    except URLError as e:
+        return None, str(e)
+    return results_string, None
+
 
 st.title('💬LODox Concept Chat Demo')
 st.caption("LODox Concept Chat powered by OpenAI LLM")
@@ -41,7 +77,9 @@ if st.session_state.start_chat:
         st.session_state.openai_model = "gpt-4-turbo-preview"
     if "messages" not in st.session_state:
         st.session_state.messages = []
-    
+    if password != st.secrets.PASSWORD:
+        st.info("Wrong password")
+        st.stop()
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
@@ -78,9 +116,22 @@ if st.session_state.start_chat:
             if message.run_id == run.id and message.role == "assistant"
         ]
         for message in assistant_messages_for_run:
-            st.session_state.messages.append({"role": "assistant", "content": message.content[0].text.value})
-            with st.chat_message("assistant"):
-                st.markdown(message.content[0].text.value)
+            if "SEARCH:" in message.content[0].text.value:
+                    sparql_code = message.content[0].text.value.split("SEARCH:", 1)[1].strip()
+                    results, error = execute_sparql_query(sparql_endpoint, sparql_code, JSON) 
+                    if error:
+                        reply_message = f"Error executing SPARQL query: {error}"
+                    else:
+                        reply_message = f"Query results: {results}"
+                    client.beta.threads.messages.create(
+                        thread_id=st.session_state.thread_id,
+                        role="user",
+                        content=reply_message
+                    )
+            else:
+                st.session_state.messages.append({"role": "assistant", "content": message.content[0].text.value})
+                with st.chat_message("assistant"):
+                    st.markdown(message.content[0].text.value)
 
 else:
     if assistant_option == "LLaMaC": 
